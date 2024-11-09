@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="static\css\style.css">
+    <meta charset="UTF-8">
+    <title>Spotter</title>
+</head>
+<body>
+    <h2 id="logo">Spotter</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h1>SPOTTER</h1>
+
+        <h3>Spotter is an advanced AI application designed to detect military vehicles</h3>
+             <h3>in aerial intelligence videos, enhancing situational awareness and</h3>
+              <h3> decision-making with precision and efficiency.</h3>
+
+        <button type="submit">Upload and Detect</button>
+
+        <h2>Video Vehicle Detection</h2>
+
+        <input type="file" name="video" accept="video/mp4, video/webm" required>
+    </form>
+
+    {% if output_video_url %}
+        <video width="640" height="480" controls>
+            <source src="{{ output_video_url }}" type="video/mp4">
+            <source src="{{ output_video_url }}" type="video/ogg">
+            <source src="{{ output_video_url }}" type="video/webm">
+            Your browser does not support the video tag.
+        </video>
+    {% endif %}
+</body>
+</html>

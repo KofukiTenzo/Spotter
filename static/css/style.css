@@ -1,0 +1,118 @@
+body{
+  background: #0f1113;
+}
+
+h1{
+  color: #ffffff;
+  margin-bottom: 15px;
+
+  font-family: "Copperplate", fantasy;
+  font-weight: bold;
+}
+
+h2{
+  color: #ffffff;
+  margin-bottom: 5px;
+
+  position: relative;
+
+  left: -385;
+
+  font-family: "Copperplate", fantasy;
+}
+
+h3{
+  color: #ffffff;
+  margin: 5px;
+
+  font-family: "Copperplate", fantasy;
+  font-weight: 100;
+}
+
+#logo{
+  margin: 15px;
+  background-color: #1d1e1f;
+
+  border: 1px solid #3c3d3d;
+  border-radius: 5px;
+
+  padding: 5px 5px;
+
+  width: 45%;
+  position: relative;
+
+  left: 27.5%;
+}
+
+  input[type=file]{
+    background-color: #17181b;
+    border: 1px solid #3c3d3d;
+    color: #ffffff;
+    padding: 6px;
+    border-radius: 5px;
+    font-size: 85%;
+    text-transform: lowercase;
+    margin: 15px;
+    cursor: pointer;
+
+    width: 53%;
+
+    padding: 3px 3px;
+    line-height: 5px;
+
+    font-family: "Copperplate", fantasy;
+
+  }
+
+  ::file-selector-button {
+    background: #262729;
+    color: white;
+    border: 1px solid #3c3d3d;
+    border-radius: 5px;
+    padding: 1rem 3rem;
+    cursor: pointer;
+
+    line-height: 5px;
+
+    font-family: "Copperplate", fantasy;
+  }
+
+  form { 
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center items horizontally */ 
+  }
+
+
+
+  ::file-selector-button:hover {
+    background-color: #0f1113;
+    color: #ffffff;
+  }
+
+  button{
+    background: #35ff7c;
+    color: black;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 1rem 3rem;
+    margin: 15px;
+    cursor: pointer;
+    margin-top: 25px;
+
+    font-family: "Copperplate", fantasy;
+
+  }
+
+  button:hover{
+    background: #308e51;
+    color: black;
+  }
+
+  video{
+    border: 1px solid #3c3d3d;
+    border-radius: 5px;
+
+    position: relative;
+    left: 35%;
+  }
