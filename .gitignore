@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 
 settings.py
+/media/
 
 # Ignore VS Code settings
 .vscode/

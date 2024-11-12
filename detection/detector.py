@@ -1,53 +1,16 @@
-from abc import ABCMeta, abstractmethod
 import os
-
 import cv2
 import torch
-from ultralytics import YOLO
 
+from detection.abstract_detector import *
 from video_detector import settings
 from torchvision.ops import nms
-
-class Detector:
-    def __init__(self, video_path, filename, yolov8_path):
+        
+class Single_Model_Detector(Detector, VideoHandler):
+    def __init__(self, video_path, filename, model: IModel):
+        super().__init__(model)
         self._video_path = video_path
         self._filename = filename
-        self._yolov8_path = yolov8_path
-        
-    @property
-    def video_path(self):
-        return self._video_path
-    
-    @property
-    def filename(self):
-        return self._filename
-    
-    @property
-    def yolov8_path(self):
-        return self._yolov8_path
-    
-    @video_path.setter  
-    def video_path(self, video_path):
-        self._video_path = video_path
-    
-    @filename.setter
-    def filename(self, filename):
-        self._filename = filename
-    
-    @yolov8_path.setter
-    def yolov8_path(self, yolov8_path):
-        self._yolov8_path = yolov8_path
-    
-    @abstractmethod
-    def detect(self):
-        pass
-        
-class Single_Model_Detector(Detector):
-    def __init__(self, video_path, filename, yolov8_path):
-        # self.set_video_path(video_path)
-        # self.set_filename(filename)
-        # self.set_yolov8_path(yolov8_path)
-        super().__init__(video_path, filename, yolov8_path)
     
     @property
     def video_path(self):
@@ -75,7 +38,6 @@ class Single_Model_Detector(Detector):
         
     def detect(self):
     # Load the YOLOv8 model
-        model = YOLO(self.yolov8_path)  # Assuming YOLOv8n model is being used
         # Run detection on each frame
         input_video = os.path.join(settings.MEDIA_ROOT, self.video_path)
         output_video = os.path.join(settings.MEDIA_ROOT, "output", f"detected_{self.filename}")
@@ -93,7 +55,7 @@ class Single_Model_Detector(Detector):
                 break
             
             # Perform detection
-            results = model(frame, augment=True)
+            results = self._model.detect(frame)
             for result in results:
                 boxes = result.boxes
                 for box in boxes:
@@ -107,10 +69,12 @@ class Single_Model_Detector(Detector):
         out.release()
         return output_video
         
-class Ensemble_Model_Detector_Consensus_Voting(Detector):
-    def __init__(self, video_path, filename, first_yolov8_path, second_yolov8_path):
-        super().__init__(video_path, filename, first_yolov8_path)
-        self._second_yolov8_path = second_yolov8_path
+class Ensemble_Model_Detector_Consensus_Voting(Detector, VideoHandler):
+    def __init__(self, video_path, filename, model1: IModel, model2: IModel):
+        self._video_path = video_path
+        self._filename = filename
+        self._model1 = model1
+        self._model2 = model2
         self.__iou_threshold=0.5
         self.__score_threshold=0.3
         
@@ -147,13 +111,9 @@ class Ensemble_Model_Detector_Consensus_Voting(Detector):
         self._second_yolov8_path = val
     
     def detect(self):
-        # Load two YOLOv8 models
-        model1 = YOLO(self._yolov8_path)  # YOLOv8 small model
-        model2 = YOLO(self._second_yolov8_path)  # YOLOv8 medium model
-
         # Set up video input and output paths
-        input_video = os.path.join(settings.MEDIA_ROOT, self._video_path)
-        output_video = os.path.join(settings.MEDIA_ROOT, "output", f"detected_{self._filename}")
+        input_video = os.path.join(settings.MEDIA_ROOT, self.video_path)
+        output_video = os.path.join(settings.MEDIA_ROOT, "output", f"detected_{self.filename}")
         cap = cv2.VideoCapture(input_video)
         fourcc = cv2.VideoWriter_fourcc(*'H264')
         out = cv2.VideoWriter(output_video, fourcc, cap.get(cv2.CAP_PROP_FPS),
@@ -165,8 +125,8 @@ class Ensemble_Model_Detector_Consensus_Voting(Detector):
                 break
 
             # Run detection with both models and augmentation
-            results1 = model1(frame, augment=True)
-            results2 = model2(frame, augment=True)
+            results1 = self._model1.detect(frame)
+            results2 = self._model2.detect(frame)
 
             # Gather predictions from both models
             boxes1, scores1, classes1 = self.extract_boxes_scores_classes(results1)
