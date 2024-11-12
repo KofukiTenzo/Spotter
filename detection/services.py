@@ -1,17 +1,10 @@
 import os
-import cv2
-import torch
-from ultralytics import YOLO
 from django.conf import settings
-from torchvision.ops import nms
-from abc import ABCMeta, abstractmethod
 from django.core.files.storage import FileSystemStorage
-from .detector import Ensemble_Model_Detector_Consensus_Voting
 
-class Cleaner():
-    @abstractmethod
-    def clean_folder():
-        pass
+from detection.YOLOModel import YOLOModel
+
+from .detector import Ensemble_Model_Detector_Consensus_Voting
 
 class Services():
     def __init__(self) -> None:
@@ -23,21 +16,21 @@ class Services():
         
         video_path = fs.save(f"uploaded_videos\\{video_file.name}", video_file)
         filename = video_file.name
-        yolo1 = "YOLO\\YOLOv8s.pt"
-        yolo2 = "YOLO\\YOLOv8m.pt"
+        
+        model1 = YOLOModel("YOLO\\YOLOv8s.pt")
+        model2 = YOLOModel("YOLO\\YOLOv8m.pt")
         
         detector = Ensemble_Model_Detector_Consensus_Voting(
             video_path,
             filename,
-            yolo1,
-            yolo2
+            model1,
+            model2
         )
         
         result = detector.detect()
-        
         detection_result = fs.url(result)
-        self.clean_folder(f'{settings.MEDIA_ROOT}\\uploaded_videos')
         
+        self.clean_folder(f'{settings.MEDIA_ROOT}\\uploaded_videos')
         return detection_result
 
     def clean_folder(self, directory_path):
