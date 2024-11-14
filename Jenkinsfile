@@ -1,9 +1,5 @@
 pipeline {
     
-    agent {
-        label 'dev-server'
-    }
-    
     stages {
         stage("Clone code") {
             steps {
