@@ -5,6 +5,13 @@ pipeline {
     }
     
     stages {
+        stage("Clone code") {
+            steps {
+                echo "Clone code from the GitHub repository"
+                git url: "https://github.com/KofukiTenzo/spotter.git", branch: "main"
+            }
+        }
+        
         stage("Build") {
             steps {
                 echo "Building Image"
