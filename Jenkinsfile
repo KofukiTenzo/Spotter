@@ -9,6 +9,13 @@ pipeline {
                 git url: "https://github.com/KofukiTenzo/spotter.git", branch: "main"
             }
         }
+
+        stage("Moving a settings") {
+            steps {
+                echo "Moving a setting"
+                sh "mv ./settings/settings.py ./spotter/video_detector"
+            }
+        }
         
         stage("Build") {
             steps {
