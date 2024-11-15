@@ -13,7 +13,7 @@ pipeline {
         stage("Moving a settings") {
             steps {
                 echo "Moving a setting"
-                sh "mv ./settings/settings.py ./spotter/video_detector"
+                sh "mv /home/ubuntu/settings/settings.py ./spotter/video_detector"
             }
         }
         
