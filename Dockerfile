@@ -2,7 +2,7 @@ FROM python:3.9
 
 WORKDIR /app
 
-COPY ./settings/settings.py /app/video_detector
+COPY COPY ../settings/settings.py /app/video_detector
 
 COPY requirements.txt /app
 RUN pip install -r requirements.txt
