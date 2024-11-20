@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY requirements.txt /app
 
+RUN pip install --upgrade pip
+
 RUN pip install -r requirements.txt --timeout=30
 
 COPY . /app
